@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 
@@ -13,7 +13,9 @@ try{
     const user = new User({ email, password });
     await user.save();
 
-    res.send('you made a post request');
+    const token = jwt.sign({userId: user._id}, 'Your_Secret_Key');
+    res.send({token});
+    
 } catch(err)
 {
     res.status(422).send(err.message);
